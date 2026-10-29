@@ -5,7 +5,8 @@ using Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddApplication()
+builder.Services
+    .AddApplication()
     .AddPersistence(builder.Configuration)
     .AddInfrastructure();
 
