@@ -1,6 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.Marketplaces;
+using Application.Order;
+using Application.Shippers;
+using Application.ShippingContracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.Marketplaces;
+using Persistence.Order;
+using Persistence.Shippers;
+using Persistence.ShippingContracts;
 
 namespace Persistence;
 
@@ -15,6 +23,10 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
 
+        services.AddScoped<IMarketplaceOrderRepository, MarketplaceOrderRepository>();
+        services.AddScoped<IMarketplaceRepository, MarketplaceRepository>();
+        services.AddScoped<IShipperRepository, ShipperRepository>();
+        services.AddScoped<IShippingContractRepository, ShippingContractRepository>();
         return services;
     }
 }

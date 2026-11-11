@@ -1,9 +1,8 @@
-using Domain;
 using Domain.ShippingContracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.Configurations.ShippingContracts;
+namespace Persistence.ShippingContracts.Configurations;
 
 public class ShippingContractConfiguration: IEntityTypeConfiguration<ShippingContract>
 {

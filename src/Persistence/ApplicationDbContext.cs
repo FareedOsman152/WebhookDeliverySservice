@@ -9,7 +9,7 @@ namespace Persistence;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<MarketplaceOrder> Orders { get; set; }
-    public DbSet<ManualResetEvent> OrderEvents { get; set; }
+    public DbSet<OrderEvent> OrderEvents { get; set; }
     public DbSet<Marketplace> Marketplaces { get; set; }
     public DbSet<Shipper> Shippers { get; set; }
     public DbSet<ShippingContract> ShippingContracts { get; set; }

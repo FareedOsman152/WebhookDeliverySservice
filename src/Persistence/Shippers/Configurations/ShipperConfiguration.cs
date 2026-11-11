@@ -1,16 +1,14 @@
-using Domain;
-using Domain.Marketplaces;
-using Domain.Order.Enums;
+using Domain.Shippers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.Configurations.Marketplaces;
+namespace Persistence.Shippers.Configurations;
 
-internal class MarketplaceConfiguration: IEntityTypeConfiguration<Marketplace>
+internal class ShipperConfiguration: IEntityTypeConfiguration<Shipper>
 {
-    public void Configure(EntityTypeBuilder<Marketplace> b)
+    public void Configure(EntityTypeBuilder<Shipper> b)
     {
-        b.ToTable("marketplaces");
+        b.ToTable("shippers");
         b.Property(e => e.Id).ValueGeneratedNever();
         
         b.Property(e => e.TradeLicenseNumber).HasMaxLength(30);
@@ -25,6 +23,6 @@ internal class MarketplaceConfiguration: IEntityTypeConfiguration<Marketplace>
         b.HasIndex(e => e.Email).IsUnique();
         b.HasIndex(e => e.PhoneNumber).IsUnique();
         
-        b.HasMany(e => e.Contracts).WithOne(e => e.Marketplace).IsRequired().OnDelete(DeleteBehavior.Restrict);
+        b.HasMany(e => e.Contracts).WithOne(e => e.Shipper).IsRequired().OnDelete(DeleteBehavior.Restrict);
     }
 }
