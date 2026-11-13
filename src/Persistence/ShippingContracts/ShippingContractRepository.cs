@@ -12,17 +12,26 @@ public sealed class ShippingContractRepository(ApplicationDbContext db) : IShipp
         await db.SaveChangesAsync(ct);
     }
 
-    public Task<ShippingContract?> GetActiveContract(Guid contractId, CancellationToken ct)
+    public async Task<ShippingContract?> GetActiveContract(Guid contractId, CancellationToken ct)
     {
-        return db.ShippingContracts.FirstOrDefaultAsync(c => c.Id == contractId && c.Status == ShippingContractStatus.Active, ct);
+        return await db.ShippingContracts.FirstOrDefaultAsync(c => c.Id == contractId && c.Status == ShippingContractStatus.Active, ct);
     }
 
-    public Task<ShippingContract?> GetActiveContract(string marketplaceTradeLicense, string shipperTradeLicense, CancellationToken ct)
+    public async Task<ShippingContract?> GetActiveContract(string marketplaceTradeLicense, string shipperTradeLicense, CancellationToken ct)
     {
-        return db.ShippingContracts
+        return await db.ShippingContracts
             .Where(c => c.Marketplace.TradeLicenseNumber == marketplaceTradeLicense
                         && c.Shipper.TradeLicenseNumber == shipperTradeLicense
                         && c.Status == ShippingContractStatus.Active)
             .SingleOrDefaultAsync(ct);
+    }
+    
+    public async Task<bool> IsActiveContractExist(string marketplaceTradeLicense, string shipperTradeLicense, CancellationToken ct)
+    {
+        return await db.ShippingContracts
+            .AnyAsync(c => c.Marketplace.TradeLicenseNumber == marketplaceTradeLicense
+                           && c.Shipper.TradeLicenseNumber == shipperTradeLicense
+                           && c.Status == ShippingContractStatus.Active
+                           , ct);
     }
 }
