@@ -1,9 +1,8 @@
-using Ardalis.SmartEnum;
 using Domain.Order.Enums;
 using Domain.ShippingContracts;
 using Shared;
 
-namespace Domain;
+namespace Domain.Order;
 
 public sealed class MarketplaceOrder: AuditableEntity
 {

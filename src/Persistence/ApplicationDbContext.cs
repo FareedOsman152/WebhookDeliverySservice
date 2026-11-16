@@ -1,5 +1,6 @@
 using Domain;
 using Domain.Marketplaces;
+using Domain.Order;
 using Domain.Shippers;
 using Domain.ShippingContracts;
 using Microsoft.EntityFrameworkCore;

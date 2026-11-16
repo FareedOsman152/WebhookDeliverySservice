@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Order;
 
 namespace Application.Order;
 

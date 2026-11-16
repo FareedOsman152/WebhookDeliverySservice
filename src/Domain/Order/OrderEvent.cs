@@ -1,6 +1,6 @@
 using Domain.Order.Enums;
 
-namespace Domain;
+namespace Domain.Order;
 
 public sealed class OrderEvent: BaseEntity
 {

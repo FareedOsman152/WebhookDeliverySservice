@@ -1,5 +1,6 @@
 using Ardalis.SmartEnum;
 using Domain.Marketplaces;
+using Domain.Order;
 using Domain.Shippers;
 
 namespace Domain.ShippingContracts;

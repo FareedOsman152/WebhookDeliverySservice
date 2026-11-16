@@ -1,6 +1,7 @@
 using Application;
 using Application.Order;
 using Domain;
+using Domain.Order;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Order;
