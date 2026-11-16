@@ -1,18 +1,33 @@
 ﻿using System.Reflection;
+using Application.MediatorConfiguration;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        var currentAssembly = typeof(DependencyInjection).Assembly;
+        public IServiceCollection AddApplication()
+        {
+            services.AddMediator();
+            return services;
+        }
+
+        private IServiceCollection AddMediator()
+        {
+            var currentAssembly = typeof(DependencyInjection).Assembly;
         
-        services.AddMediatR(config => config.RegisterServicesFromAssembly(currentAssembly));
-        services.AddValidatorsFromAssembly(currentAssembly);
+            services.AddValidatorsFromAssembly(currentAssembly);
+            services.AddMediatR(config =>
+            {
+                config.RegisterServicesFromAssembly(currentAssembly);
+                config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
         
-        return services;
+            return services;
+        }
     }
 }
