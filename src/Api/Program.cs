@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
     .AddApplication()
     .AddPersistence(builder.Configuration)
     .AddInfrastructure();
@@ -14,9 +16,11 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    // app.MapOpenApi();
 }
-
+app.MapSwagger();
 app.UseHttpsRedirection();
 
 
