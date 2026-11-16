@@ -23,4 +23,9 @@ public class MarketplaceOrderRepository(ApplicationDbContext db): IMarketplaceOr
     {
         return await db.Orders.AnyAsync(o => o.Id == orderId, ct);
     }
+    
+    public async Task<bool> IsExist(string marketplaceOrderId, Guid shippingContractId, CancellationToken ct)
+    {
+        return await db.Orders.AnyAsync(o => o.MarketplaceOrderId == marketplaceOrderId && o.ShippingContractId == shippingContractId, ct);
+    }
 }
