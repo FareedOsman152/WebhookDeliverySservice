@@ -1,4 +1,5 @@
 using Api;
+using Api.Endpoints;
 using Application;
 using Infrastructure;
 using Persistence;
@@ -24,6 +25,7 @@ if (app.Environment.IsDevelopment())
 }
 app.MapSwagger();
 app.UseHttpsRedirection();
+OrderFromMarketplaceEndpoints.Map(app);
 
 
 app.Run();
