@@ -10,7 +10,8 @@ builder.Services
     .AddSwaggerGen()
     .AddApplication()
     .AddPersistence(builder.Configuration)
-    .AddInfrastructure();
+    .AddInfrastructure()
+    .AddProblemDetails();
 
 var app = builder.Build();
 
@@ -18,6 +19,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
     // app.MapOpenApi();
 }
 app.MapSwagger();
