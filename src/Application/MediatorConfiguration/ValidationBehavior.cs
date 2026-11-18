@@ -17,7 +17,7 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         var results = await Task.WhenAll(validators.Select(v => v.ValidateAsync(ctx, ct)));
         var failures = results.SelectMany(r => r.Errors).ToList();
         if (failures.Count != 0)
-            throw new FluentValidation.ValidationException(failures);
+            throw new FluentValidation.ValidationException("Validation Errors", failures);
         
         return await next(ct);
     }
