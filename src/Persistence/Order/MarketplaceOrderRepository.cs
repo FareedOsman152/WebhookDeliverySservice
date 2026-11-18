@@ -2,6 +2,7 @@ using Application;
 using Application.Order;
 using Domain;
 using Domain.Order;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Order;
@@ -11,7 +12,14 @@ public class MarketplaceOrderRepository(ApplicationDbContext db): IMarketplaceOr
     public async Task Add(MarketplaceOrder order, CancellationToken ct)
     {
         db.Orders.Add(order);
-        await db.SaveChangesAsync(ct);
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 or 2627 })
+        {
+            throw new DuplicateOrderException("Order already exists", e);
+        }
     }
 
     public async Task<MarketplaceOrder?> GetById(Guid orderId, CancellationToken ct)
