@@ -16,12 +16,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var currentAssembly = typeof(DependencyInjection).Assembly;
-        
         var connectionString = configuration["ConnectionString"];
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString));
+            options.UseSqlServer(connectionString, sql =>
+        {
+            sql.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null);
+        }));
 
         services.AddScoped<IMarketplaceOrderRepository, MarketplaceOrderRepository>();
         services.AddScoped<IMarketplaceRepository, MarketplaceRepository>();
