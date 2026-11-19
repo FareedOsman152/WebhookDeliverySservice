@@ -11,7 +11,7 @@ builder.Services
     .AddApi()
     .AddApplication()
     .AddPersistence(builder.Configuration)
-    .AddInfrastructure();
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 

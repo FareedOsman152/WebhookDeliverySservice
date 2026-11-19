@@ -17,6 +17,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IPro
 
     private async ValueTask<bool> HandleDatabaseUnavailable(HttpContext httpContext, Exception exception)
     {
+        logger.LogError(exception, "Database unavailable. Request: {Method} {RequestPath}", httpContext.Request.Method, httpContext.Request.Path);
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
@@ -32,6 +33,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IPro
 
     private async ValueTask<bool> HandleInternalServerError(HttpContext httpContext, Exception exception)
     {
+        logger.LogError(exception, "Unhandled exception. Request: {Method} {RequestPath}", httpContext.Request.Method, httpContext.Request.Path);
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext =  httpContext,
