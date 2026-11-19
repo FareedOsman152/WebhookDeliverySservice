@@ -16,7 +16,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration["ConnectionString"];
+        var connectionString = configuration.GetConnectionString("WebhookDeliveryDb");
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString, sql =>
