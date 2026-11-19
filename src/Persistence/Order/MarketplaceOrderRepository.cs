@@ -2,6 +2,7 @@ using Application;
 using Application.Order;
 using Domain;
 using Domain.Order;
+using Domain.Order.Enums;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,5 +36,15 @@ public class MarketplaceOrderRepository(ApplicationDbContext db): IMarketplaceOr
     public async Task<bool> IsExist(string marketplaceOrderId, Guid shippingContractId, CancellationToken ct)
     {
         return await db.Orders.AnyAsync(o => o.MarketplaceOrderId == marketplaceOrderId && o.ShippingContractId == shippingContractId, ct);
+    }
+
+    public async Task<List<MarketplaceOrder>> GetReadyToShippingOrders(CancellationToken ct)
+    {
+        return await db.Orders.Where(o => o.Status == OrderStatus.ReadyToShipping).ToListAsync(ct);
+    }
+
+    public async Task Update(MarketplaceOrder order, CancellationToken ct)
+    {
+        await db.SaveChangesAsync(ct);
     }
 }

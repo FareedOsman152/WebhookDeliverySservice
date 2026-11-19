@@ -9,4 +9,6 @@ public interface IMarketplaceOrderRepository
     public Task<MarketplaceOrder?> GetById(Guid orderId, CancellationToken ct);
     public Task<bool> IsExist(Guid orderId, CancellationToken ct);
     Task<bool> IsExist(string marketplaceOrderId, Guid shippingContractId, CancellationToken ct);
+    Task<List<MarketplaceOrder>> GetReadyToShippingOrders(CancellationToken ct);
+    Task Update(MarketplaceOrder order, CancellationToken ct);
 }
