@@ -32,6 +32,16 @@ public sealed class MarketplaceOrder: AuditableEntity
     }
     
     // methods for update the order with the several events, will be done after ef configuration.
+
+    public void AttemptToShipOrder()
+    {
+        if (Status != OrderStatus.ReadyToShipping)
+            throw new InvalidOperationException($"Order {Id} is not ready to ship, current status is {Status.Value}");
+
+        var statusBefore = Status;
+        Status = OrderStatus.AttemptingToShip;
+        _events.Add(new OrderEvent(Id, OrderEventType.ShippingAttemptStarted, statusBefore, Status));
+    }
     
     public string MarketplaceOrderId { get; private set; }
     public OrderStatus Status { get; private set; }
