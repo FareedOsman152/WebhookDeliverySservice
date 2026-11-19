@@ -38,11 +38,18 @@ public class ShipOrderWorker(IMarketplaceOrderRepository ordersRepo, IBackground
         {
             await ordersRepo.Update(order, ct);
         }
-        catch (OrderConcurrencyException)
+        catch (OrderConcurrencyException e)
         {
-            // TODO: a retried SaveChanges that already committed lands here too (points-to-be-handled #1); the order stays AttemptingToShip and is never shipped.
-            logger.LogWarning("Order {OrderId} has race condition", orderId);
-            return;
+            // TODO: a retried SaveChanges that already committed lands here too (points-to-be-handled #1): our own first attempt changed Status, so it is classified as OrderNotReadyToShip, logged as a lost race, and the order stays AttemptingToShip and is never shipped.
+            switch (e.Result)
+            {
+                case OrderNotReadyToShip:
+                    logger.LogWarning("Order {OrderId} has race condition, it is no longer ready to ship", orderId);
+                    return;
+                case OrderUpdateConflict:
+                    logger.LogWarning("Order {OrderId} has race condition, the job will be retried", orderId);
+                    throw;
+            }
         }
         // TODO: Ship the order
     }

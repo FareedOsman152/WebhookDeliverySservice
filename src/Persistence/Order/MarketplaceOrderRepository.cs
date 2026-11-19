@@ -5,6 +5,8 @@ using Domain.Order;
 using Domain.Order.Enums;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace Persistence.Order;
@@ -57,26 +59,55 @@ public class MarketplaceOrderRepository(ApplicationDbContext db, ILogger<Marketp
         }
         catch (DbUpdateConcurrencyException e)
         {
+            OrderUpdateResult result = new OrderUpdateConflict();
+
             foreach (var entry in e.Entries)
             {
-                var attemptedChanges = string.Join(", ", entry.Properties
-                    .Where(p => p.IsModified)
-                    .Select(p => $"{p.Metadata.Name}: {Format(p.OriginalValue)} -> {Format(p.CurrentValue)}"));
-
                 var databaseValues = await entry.GetDatabaseValuesAsync(ct);
-                var databaseChanges = databaseValues == null
-                    ? "row was deleted"
-                    : string.Join(", ", databaseValues.Properties
-                        .Where(p => !Equals(Format(entry.OriginalValues[p]), Format(databaseValues[p])))
-                        .Select(p => $"{p.Name}: {Format(entry.OriginalValues[p])} -> {Format(databaseValues[p])}"));
+                var changedInDatabase = GetChangedInDatabase(entry, databaseValues);
 
                 logger.LogWarning(
                     "Concurrency conflict on {EntityType} {OrderId}. Attempted changes: [{AttemptedChanges}]. Changed in database since load: [{DatabaseChanges}]",
-                    entry.Metadata.ClrType.Name, order.Id, attemptedChanges, databaseChanges);
+                    entry.Metadata.ClrType.Name, order.Id, DescribeAttemptedChanges(entry), DescribeDatabaseChanges(entry, databaseValues, changedInDatabase));
+
+                if (IsOrderStatusChanged(entry, changedInDatabase))
+                    result = new OrderNotReadyToShip();
             }
 
-            throw new OrderConcurrencyException($"Order {order.Id} was updated by another process", e);
+            throw new OrderConcurrencyException($"Order {order.Id} was updated by another process", result, e);
         }
+    }
+
+    private static List<IProperty> GetChangedInDatabase(EntityEntry entry, PropertyValues? databaseValues)
+    {
+        if (databaseValues == null)
+            return [];
+
+        return databaseValues.Properties
+            .Where(p => !Equals(Format(entry.OriginalValues[p]), Format(databaseValues[p])))
+            .ToList();
+    }
+
+    private static bool IsOrderStatusChanged(EntityEntry entry, List<IProperty> changedInDatabase)
+    {
+        return entry.Entity is MarketplaceOrder
+            && changedInDatabase.Any(p => p.Name == nameof(MarketplaceOrder.Status));
+    }
+
+    private static string DescribeAttemptedChanges(EntityEntry entry)
+    {
+        return string.Join(", ", entry.Properties
+            .Where(p => p.IsModified)
+            .Select(p => $"{p.Metadata.Name}: {Format(p.OriginalValue)} -> {Format(p.CurrentValue)}"));
+    }
+
+    private static string DescribeDatabaseChanges(EntityEntry entry, PropertyValues? databaseValues, List<IProperty> changedInDatabase)
+    {
+        if (databaseValues == null)
+            return "row was deleted";
+
+        return string.Join(", ", changedInDatabase
+            .Select(p => $"{p.Name}: {Format(entry.OriginalValues[p])} -> {Format(databaseValues[p])}"));
     }
 
     private static string? Format(object? value)
