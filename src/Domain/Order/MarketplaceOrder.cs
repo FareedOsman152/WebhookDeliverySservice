@@ -43,6 +43,9 @@ public sealed class MarketplaceOrder: AuditableEntity
     // in the contract we have the marketplace and shipper ids
     public Guid ShippingContractId { get; private set; } // within which shipping contract?
     public ShippingContract ShippingContract { get; private set; }
+
+    // SQL Server changes it on every update of the row; EF checks it on save so that if two workers update the same order, the second save fails.
+    public byte[] RowVersion { get; private set; }
     
     public IEnumerable<OrderEvent> Events => _events;
     private List<OrderEvent> _events;

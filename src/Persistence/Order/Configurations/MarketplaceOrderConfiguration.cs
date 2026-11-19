@@ -14,6 +14,7 @@ internal class MarketplaceOrderEventConfiguration: IEntityTypeConfiguration<Mark
         b.Property(e => e.Id).ValueGeneratedNever();
         
         b.Property(e => e.Status).HasConversion(toDb => toDb.Value, fromDb => OrderStatus.FromValue(fromDb)).HasMaxLength(50);
+        b.Property(e => e.RowVersion).IsRowVersion();
         
         b.HasIndex(e => new{ e.MarketplaceOrderId, e.ShippingContractId }).IsUnique();
         

@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Marketplace", b =>
+            modelBuilder.Entity("Domain.Marketplaces.Marketplace", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -78,7 +78,7 @@ namespace Persistence.Migrations
                     b.ToTable("marketplaces", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.MarketplaceOrder", b =>
+            modelBuilder.Entity("Domain.Order.MarketplaceOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -97,6 +97,12 @@ namespace Persistence.Migrations
                     b.Property<string>("OrderDetails")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid>("ShippingContractId")
                         .HasColumnType("uniqueidentifier");
@@ -120,7 +126,7 @@ namespace Persistence.Migrations
                     b.ToTable("marketplaceOrders", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.OrderEvent", b =>
+            modelBuilder.Entity("Domain.Order.OrderEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -152,7 +158,7 @@ namespace Persistence.Migrations
                     b.ToTable("marketplaceOrderEvents", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Shipper", b =>
+            modelBuilder.Entity("Domain.Shippers.Shipper", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -208,7 +214,7 @@ namespace Persistence.Migrations
                     b.ToTable("shippers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.ShippingContract", b =>
+            modelBuilder.Entity("Domain.ShippingContracts.ShippingContract", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -236,9 +242,9 @@ namespace Persistence.Migrations
                     b.ToTable("shippingContracts", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.MarketplaceOrder", b =>
+            modelBuilder.Entity("Domain.Order.MarketplaceOrder", b =>
                 {
-                    b.HasOne("Domain.ShippingContract", "ShippingContract")
+                    b.HasOne("Domain.ShippingContracts.ShippingContract", "ShippingContract")
                         .WithMany("Orders")
                         .HasForeignKey("ShippingContractId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -247,9 +253,9 @@ namespace Persistence.Migrations
                     b.Navigation("ShippingContract");
                 });
 
-            modelBuilder.Entity("Domain.OrderEvent", b =>
+            modelBuilder.Entity("Domain.Order.OrderEvent", b =>
                 {
-                    b.HasOne("Domain.MarketplaceOrder", "Order")
+                    b.HasOne("Domain.Order.MarketplaceOrder", "Order")
                         .WithMany("Events")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -258,15 +264,15 @@ namespace Persistence.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Domain.ShippingContract", b =>
+            modelBuilder.Entity("Domain.ShippingContracts.ShippingContract", b =>
                 {
-                    b.HasOne("Domain.Marketplace", "Marketplace")
+                    b.HasOne("Domain.Marketplaces.Marketplace", "Marketplace")
                         .WithMany("Contracts")
                         .HasForeignKey("MarketplaceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Shipper", "Shipper")
+                    b.HasOne("Domain.Shippers.Shipper", "Shipper")
                         .WithMany("Contracts")
                         .HasForeignKey("ShipperId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -277,22 +283,22 @@ namespace Persistence.Migrations
                     b.Navigation("Shipper");
                 });
 
-            modelBuilder.Entity("Domain.Marketplace", b =>
+            modelBuilder.Entity("Domain.Marketplaces.Marketplace", b =>
                 {
                     b.Navigation("Contracts");
                 });
 
-            modelBuilder.Entity("Domain.MarketplaceOrder", b =>
+            modelBuilder.Entity("Domain.Order.MarketplaceOrder", b =>
                 {
                     b.Navigation("Events");
                 });
 
-            modelBuilder.Entity("Domain.Shipper", b =>
+            modelBuilder.Entity("Domain.Shippers.Shipper", b =>
                 {
                     b.Navigation("Contracts");
                 });
 
-            modelBuilder.Entity("Domain.ShippingContract", b =>
+            modelBuilder.Entity("Domain.ShippingContracts.ShippingContract", b =>
                 {
                     b.Navigation("Orders");
                 });
