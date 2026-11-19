@@ -14,6 +14,7 @@ public sealed class OrderEventType : SmartEnum<OrderEventType, string>
     public string NameAr { get; private set; }
 
     public static readonly OrderEventType MarketplaceSentNewOrder = new("MARKETPLACE_SENT_NEW_ORDER", nameof(MarketplaceSentNewOrder), "الماركت أرسل طلباً جديداً");
+    public static readonly OrderEventType ShippingAttemptStarted = new("SHIPPING_ATTEMPT_STARTED", nameof(ShippingAttemptStarted), "بدأت محاولة الشحن");
     public static readonly OrderEventType SentToShipper = new("SENT_TO_SHIPPER", nameof(SentToShipper), "تم إرساله إلى شركة الشحن");
     public static readonly OrderEventType FailedToSentToShipper = new("FAILED_TO_SENT_TO_SHIPPER", nameof(FailedToSentToShipper), "فشل الإرسال إلى شركة الشحن");
     public static readonly OrderEventType ShipperRefusedTheOrder = new("SHIPPER_REFUSED_THE_ORDER", nameof(ShipperRefusedTheOrder), "رفضت شركة الشحن الطلب");

@@ -14,6 +14,7 @@ public sealed class OrderStatus : SmartEnum<OrderStatus, string>
     public string NameAr { get; private set; }
 
     public static readonly OrderStatus ReadyToShipping = new("READY_TO_SHIPPING", nameof(ReadyToShipping), "جاهز للشحن");
+    public static readonly OrderStatus AttemptingToShip = new("ATTEMPTING_TO_SHIP", nameof(AttemptingToShip), "جاري محاولة الشحن");
     public static readonly OrderStatus InShipping = new("IN_SHIPPING", nameof(InShipping), "قيد الشحن");
     public static readonly OrderStatus Refused = new("REFUSED", nameof(Refused), "مرفوض");
     public static readonly OrderStatus Cancelled = new("CANCELLED", nameof(Cancelled), "ملغي");
