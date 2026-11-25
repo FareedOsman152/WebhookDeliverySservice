@@ -484,3 +484,7 @@ $RECYCLE.BIN/
 # Claude Code
 CLAUDE.md
 .claude/
+
+# Antigravity
+AGENTS.md
+.agents/
