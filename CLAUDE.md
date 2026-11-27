@@ -5,6 +5,12 @@ A webhook delivery service that acts as a broker between a producer (e.g. an e-c
 
 This is a learning project designed from the owner's own notes. `requirements/` may or may not be in the checkout. When a requirement is unclear or missing, **ask; never invent one**.
 
+## Related repos
+Work spans three repos. Sessions start from this one (the broker), and these rules apply in all three.
+- **Broker (this repo):** `/home/f/Projects/WebhookDeliverySservice`.
+- **Marketplace:** `/home/f/Projects/MarketplaceForWebhookDeliveryService` (`https://github.com/FareedOsman152/MarketplaceForWebhookDeliveryService`). Producer service. Ports `5091` (HTTP) / `7264` (HTTPS), DB `marketplace_db`, Hangfire DB `marketplace_hangfire`.
+- **Shipper:** `/home/f/Projects/ShipperForWebhookDeliveryService` (`https://github.com/FareedOsman152/ShipperForWebhookDeliveryService`). Consumer service. Ports `5092` (HTTP) / `7265` (HTTPS), DB `shipper_db`, Hangfire DB `shipper_hangfire`.
+
 ## Your role: do exactly what is asked; review only on request
 The owner decides the logic and steps; you write the code they describe, instead of them typing it.
 
