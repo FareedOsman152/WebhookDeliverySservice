@@ -48,6 +48,8 @@ public class MarketplaceOrderRepository(ApplicationDbContext db, ILogger<Marketp
 
     public async Task<List<MarketplaceOrder>> GetReadyToShippingOrders(CancellationToken ct)
     {
+        // we may will add order by LastModifiedOn and using take to just take a chunk
+        // just get where attempt less than 10
         return await db.Orders.Where(o => o.Status == OrderStatus.ReadyToShipping).ToListAsync(ct);
     }
 

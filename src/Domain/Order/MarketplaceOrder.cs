@@ -54,6 +54,9 @@ public sealed class MarketplaceOrder: AuditableEntity
     public Guid ShippingContractId { get; private set; } // within which shipping contract?
     public ShippingContract ShippingContract { get; private set; }
 
+    // int attempt to shipping init with 0 in the copnstructor on saving
+
+
     // SQL Server changes it on every update of the row; EF checks it on save so that if two workers update the same order, the second save fails.
     public byte[] RowVersion { get; private set; }
     

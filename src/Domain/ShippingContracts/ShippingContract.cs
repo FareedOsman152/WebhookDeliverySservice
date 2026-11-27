@@ -23,6 +23,9 @@ public sealed class ShippingContract: BaseEntity
     public Marketplace Marketplace { get; private set; }
     public Guid ShipperId { get; private set; }
     public Shipper Shipper { get; private set; }
+
+    // bool (IsDown) => and we will ahve a worker to check each down shipper => after the latest update just make it true => and that means we need to make this auditableEntity to check the latest modification
+    // and in orderRepo =>GetReadyToShippingOrders => it will add more Where(o => o.Contract.IsDown) => the issue we will have a join in each call
     
     public IEnumerable<MarketplaceOrder> Orders => _orders;
     private List<MarketplaceOrder> _orders;
