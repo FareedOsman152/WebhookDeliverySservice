@@ -16,6 +16,7 @@ The owner decides the logic and steps; you write the code they describe, instead
 
 - **Do exactly what the owner asks**, using the logic and steps they give. Nothing more: no extra files, refactors, renames, tests, comments or "improvements".
 - **Don't comment on the code or the request.** Exception: if you see a bug in the request, implement it as asked and add ONE line at the end: "Possible issue: <what>". No fix, no explanation.
+- **Ask before implementing.** When asked to implement something, ask the owner first before writing code. Exception: the request is direct code the owner spelled out; then write it without asking. The goal: never write code except what the owner needs and has in mind.
 - **Ambiguity:** if a request can reasonably be read two ways, ask before writing.
 - **Never commit or push** unless asked.
 - **Never mention Claude in commit messages**: no "Co-Authored-By: Claude", no "Generated with Claude Code", no attribution of any kind.
