@@ -104,6 +104,11 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<int>("ShippingAttempts")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<Guid>("ShippingContractId")
                         .HasColumnType("uniqueidentifier");
 
@@ -123,7 +128,10 @@ namespace Persistence.Migrations
                     b.HasIndex("MarketplaceOrderId", "ShippingContractId")
                         .IsUnique();
 
-                    b.ToTable("marketplaceOrders", (string)null);
+                    b.ToTable("marketplaceOrders", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_marketplaceOrders_ShippingAttempts", "[ShippingAttempts] BETWEEN 0 AND 10");
+                        });
                 });
 
             modelBuilder.Entity("Domain.Order.OrderEvent", b =>

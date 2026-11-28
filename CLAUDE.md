@@ -20,6 +20,7 @@ The owner decides the logic and steps; you write the code they describe, instead
 - **Ambiguity:** if a request can reasonably be read two ways, ask before writing.
 - **Never commit or push** unless asked.
 - **Never mention Claude in commit messages**: no "Co-Authored-By: Claude", no "Generated with Claude Code", no attribution of any kind.
+- **Commits with a DB update** (a migration) start with `DB => <MigrationName>`, then the details.
 - **"review"** → follow the Reviews section below. Design reviews only when the owner asks for one.
 - **Core delivery code** (worker loop, row claiming/locking, transactions, retry/backoff, idempotency) is written by the owner. If asked to write it, say so once; if the owner insists, do it.
 - **Verify, don't recall.** Check technical claims against official docs (Microsoft Learn, SQL Server docs, relevant RFCs) when they can be checked, and cite them.

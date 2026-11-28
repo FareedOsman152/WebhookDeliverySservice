@@ -19,6 +19,7 @@ public sealed class MarketplaceOrder: AuditableEntity
         ShippingDetails = shippingDetails;
         ShippingContractId = shippingContractId;
         Status = OrderStatus.ReadyToShipping;
+        ShippingAttempts = 0;
         _events = [];
     }
     
@@ -38,9 +39,8 @@ public sealed class MarketplaceOrder: AuditableEntity
         if (Status != OrderStatus.ReadyToShipping)
             throw new InvalidOperationException($"Order {Id} is not ready to ship, current status is {Status.Value}");
 
-        var statusBefore = Status;
-        Status = OrderStatus.AttemptingToShip;
-        _events.Add(new OrderEvent(Id, OrderEventType.ShippingAttemptStarted, statusBefore, Status));
+        ShippingAttempts++;
+        _events.Add(new OrderEvent(Id, OrderEventType.ShippingAttemptStarted, Status, Status));
     }
     
     public string MarketplaceOrderId { get; private set; }
@@ -54,7 +54,8 @@ public sealed class MarketplaceOrder: AuditableEntity
     public Guid ShippingContractId { get; private set; } // within which shipping contract?
     public ShippingContract ShippingContract { get; private set; }
 
-    // int attempt to shipping init with 0 in the copnstructor on saving
+    public const int MaxShippingAttempts = 10;
+    public int ShippingAttempts { get; private set; }
 
 
     // SQL Server changes it on every update of the row; EF checks it on save so that if two workers update the same order, the second save fails.

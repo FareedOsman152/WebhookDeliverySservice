@@ -10,11 +10,14 @@ internal class MarketplaceOrderEventConfiguration: IEntityTypeConfiguration<Mark
 {
     public void Configure(EntityTypeBuilder<MarketplaceOrder> b)
     {
-        b.ToTable("marketplaceOrders");
+        b.ToTable("marketplaceOrders", t => t.HasCheckConstraint(
+            "CK_marketplaceOrders_ShippingAttempts",
+            $"[ShippingAttempts] BETWEEN 0 AND {MarketplaceOrder.MaxShippingAttempts}"));
         b.Property(e => e.Id).ValueGeneratedNever();
         
         b.Property(e => e.Status).HasConversion(toDb => toDb.Value, fromDb => OrderStatus.FromValue(fromDb)).HasMaxLength(50);
         b.Property(e => e.RowVersion).IsRowVersion();
+        b.Property(e => e.ShippingAttempts).HasDefaultValue(0);
         
         b.HasIndex(e => new{ e.MarketplaceOrderId, e.ShippingContractId }).IsUnique();
         
