@@ -18,6 +18,7 @@ internal class ShipperConfiguration: IEntityTypeConfiguration<Shipper>
         b.Property(e => e.WebsiteLink).HasMaxLength(200);
         b.Property(e => e.Email).HasMaxLength(50);
         b.Property(e => e.PhoneNumber).HasMaxLength(20);
+        b.Property(e => e.EndpointUrl).HasMaxLength(500);
         
         b.HasIndex(e => e.TradeLicenseNumber).IsUnique();
         b.HasIndex(e => e.Email).IsUnique();

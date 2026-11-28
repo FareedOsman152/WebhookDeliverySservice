@@ -5,7 +5,7 @@ namespace Domain.Shippers;
 public sealed class Shipper: BaseEntity
 {
     private Shipper() {}
-    public Shipper(string tradeLicenseNumber, string nameEn, string nameAr, string? address, string websiteLink, string email, string phoneNumber)
+    public Shipper(string tradeLicenseNumber, string nameEn, string nameAr, string? address, string websiteLink, string email, string phoneNumber, string endpointUrl)
     {
         TradeLicenseNumber = tradeLicenseNumber;
         NameEn = nameEn;
@@ -14,6 +14,7 @@ public sealed class Shipper: BaseEntity
         WebsiteLink = websiteLink;
         Email = email;
         PhoneNumber = phoneNumber;
+        EndpointUrl = endpointUrl;
         _contracts = [];
     }
     public string TradeLicenseNumber { get; private set; }
@@ -23,6 +24,7 @@ public sealed class Shipper: BaseEntity
     public string WebsiteLink { get; private set; }
     public string Email { get; private set; }
     public string PhoneNumber { get; private set; }
+    public string EndpointUrl { get; private set; }
     public IEnumerable<ShippingContract> Contracts => _contracts;
     private List<ShippingContract> _contracts;
 }
