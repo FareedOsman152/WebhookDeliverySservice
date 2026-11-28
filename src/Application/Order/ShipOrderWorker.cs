@@ -32,6 +32,10 @@ public class ShipOrderWorker(IMarketplaceOrderRepository ordersRepo, IBackground
         // if the shipper refused => update the order to refused then nothing to do, another worker will handler refused orders
         // I think there is no any other case, cases like 401 we don't care about for now, and if we have it (we don't hav auth) => we will just delegate to another api to get token or any thing else...
 
+        // NOTE (check later): shipper wait is n * 10s (10, 20, 30, ...) and the test round sends the whole chunk => every failed round costs those orders one attempt => an outage longer than ~7-8 min uses up all 10 attempts. Reset n on success; n is in memory, so a restart resets it to 0.
+        // NOTE (assumption): one instance only => there is no in-flight marker on the order, so two processes running at once (deploy overlap, two `dotnet run`) can claim and send the same orders.
+        // NOTE (handle later): sends run in parallel with Task.WhenAll, then one SaveChanges => an unexpected exception in one shipper's task is rethrown by WhenAll; if ExecuteAsync doesn't catch it, the BackgroundService stops the host (default since .NET 6). Also `await Task.WhenAll` surfaces only the first exception; the others are lost unless logged.
+
 
         // TODO: orders that already have a pending job are enqueued again on every check (points-to-be-handled #2).
         foreach (var order in orders)
